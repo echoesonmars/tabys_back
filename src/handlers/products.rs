@@ -4,7 +4,7 @@ use worker::*;
 
 // 1. Получение списка
 pub async fn list_products(req: Request, ctx: RouteContext<()>) -> Result<Response> {
-    let d1 = ctx.env.d1("tabys_db")?;
+    let d1 = ctx.env.d1("akniet_db")?;
     let url = req.url()?;
     let query_pairs: Vec<(String, String)> = url.query_pairs().into_owned().collect();
 
@@ -49,8 +49,8 @@ pub async fn list_products(req: Request, ctx: RouteContext<()>) -> Result<Respon
 // 3. Создание товара
 pub async fn create_product(mut req: Request, ctx: RouteContext<()>) -> Result<Response> {
     let form = req.form_data().await?; // Используем встроенный метод
-    let bucket = ctx.env.bucket("tabys_bucket")?;
-    let d1 = ctx.env.d1("tabys_db")?;
+    let bucket = ctx.env.bucket("akniet_bucket")?;
+    let d1 = ctx.env.d1("akniet_db")?;
 
     let mut name = String::new();
     let mut name_kk = String::new();
@@ -131,8 +131,8 @@ pub async fn create_product(mut req: Request, ctx: RouteContext<()>) -> Result<R
 // удаление товара
 
 pub async fn delete_product(mut req: Request, ctx: RouteContext<()>) -> Result<Response> {
-    let d1 = ctx.env.d1("tabys_db")?;
-    let bucket = ctx.env.bucket("tabys_bucket")?;
+    let d1 = ctx.env.d1("akniet_db")?;
+    let bucket = ctx.env.bucket("akniet_bucket")?;
 
     let body: serde_json::Value = req.json().await?;
 
@@ -166,7 +166,7 @@ pub async fn delete_product(mut req: Request, ctx: RouteContext<()>) -> Result<R
 // поиск одного товара
 pub async fn get_product(_req: Request, ctx: RouteContext<()>) -> Result<Response> {
     let id = ctx.param("id").map(|s| s.to_string()).unwrap_or_default();
-    let d1 = ctx.env.d1("tabys_db")?;
+    let d1 = ctx.env.d1("akniet_db")?;
 
     let statement = d1
         .prepare("SELECT * FROM products WHERE id = ?")
@@ -184,8 +184,8 @@ pub async fn get_product(_req: Request, ctx: RouteContext<()>) -> Result<Respons
 pub async fn update_product(mut req: Request, ctx: RouteContext<()>) -> Result<Response> {
     let id = ctx.param("id").map(|s| s.to_string()).unwrap_or_default();
     let form = req.form_data().await?;
-    let d1 = ctx.env.d1("tabys_db")?;
-    let bucket = ctx.env.bucket("tabys_bucket")?;
+    let d1 = ctx.env.d1("akniet_db")?;
+    let bucket = ctx.env.bucket("akniet_bucket")?;
 
     let name = match form.get("name") {
         Some(FormEntry::Field(s)) if s != "undefined" => s,
@@ -280,7 +280,7 @@ pub async fn update_product(mut req: Request, ctx: RouteContext<()>) -> Result<R
 
 //получение товаров для корзины
 pub async fn get_cart_items(mut req: Request, ctx: RouteContext<()>) -> Result<Response> {
-    let d1 = ctx.env.d1("tabys_db")?;
+    let d1 = ctx.env.d1("akniet_db")?;
     let body: serde_json::Value = req.json().await?;
 
     let ids_raw = body["ids"].as_array().ok_or("No IDs")?;

@@ -4,7 +4,7 @@ use worker::*;
 
 pub async fn list_categories(_req: Request, ctx: RouteContext<()>) -> Result<Response> {
     // Подключение к базе данных
-    let d1 = ctx.env.d1("tabys_db")?;
+    let d1 = ctx.env.d1("akniet_db")?;
 
     let statement = d1.prepare("SELECT * FROM categories");
 
@@ -20,8 +20,8 @@ pub async fn list_categories(_req: Request, ctx: RouteContext<()>) -> Result<Res
 //Добавление категории
 pub async fn create_category(mut req: Request, ctx: RouteContext<()>) -> Result<Response> {
     let form = req.form_data().await?;
-    let bucket = ctx.env.bucket("tabys_bucket")?;
-    let d1 = ctx.env.d1("tabys_db")?;
+    let bucket = ctx.env.bucket("akniet_bucket")?;
+    let d1 = ctx.env.d1("akniet_db")?;
 
     let name = form
         .get("name")
@@ -111,8 +111,8 @@ pub async fn create_category(mut req: Request, ctx: RouteContext<()>) -> Result<
 //Удаление категории
 
 pub async fn delete_category(mut req: Request, ctx: RouteContext<()>) -> Result<Response> {
-    let d1 = ctx.env.d1("tabys_db")?;
-    let bucket = ctx.env.bucket("tabys_bucket")?;
+    let d1 = ctx.env.d1("akniet_db")?;
+    let bucket = ctx.env.bucket("akniet_bucket")?;
 
     let body: serde_json::Value = req.json().await?;
     let id = body["id"]
@@ -145,7 +145,7 @@ pub async fn delete_category(mut req: Request, ctx: RouteContext<()>) -> Result<
 //Получить категорию
 pub async fn get_category(_req: Request, ctx: RouteContext<()>) -> Result<Response> {
     let id = ctx.param("id").map(|s| s.to_string()).unwrap_or_default();
-    let d1 = ctx.env.d1("tabys_db")?;
+    let d1 = ctx.env.d1("akniet_db")?;
 
     let statement = d1
         .prepare("SELECT * FROM categories WHERE id = ?")
@@ -162,8 +162,8 @@ pub async fn get_category(_req: Request, ctx: RouteContext<()>) -> Result<Respon
 pub async fn update_category(mut req: Request, ctx: RouteContext<()>) -> Result<Response> {
     let id = ctx.param("id").map(|s| s.to_string()).unwrap_or_default();
     let form = req.form_data().await?;
-    let d1 = ctx.env.d1("tabys_db")?;
-    let bucket = ctx.env.bucket("tabys_bucket")?;
+    let d1 = ctx.env.d1("akniet_db")?;
+    let bucket = ctx.env.bucket("akniet_bucket")?;
 
     // Извлекаем поля с защитой от пустых значений
     let name = form

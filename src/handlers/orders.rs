@@ -3,7 +3,7 @@ use worker::*;
 
 // Список заказов
 pub async fn list_orders(_req: Request, ctx: RouteContext<()>) -> Result<Response> {
-    let d1 = ctx.env.d1("tabys_db")?;
+    let d1 = ctx.env.d1("akniet_db")?;
     let statement = d1.prepare("SELECT * FROM orders ORDER BY created_at DESC");
 
     match statement.all().await {
@@ -14,7 +14,7 @@ pub async fn list_orders(_req: Request, ctx: RouteContext<()>) -> Result<Respons
 
 // Удаление заказа
 pub async fn delete_order(mut req: Request, ctx: RouteContext<()>) -> Result<Response> {
-    let d1 = ctx.env.d1("tabys_db")?;
+    let d1 = ctx.env.d1("akniet_db")?;
     let body: serde_json::Value = req.json().await?;
 
     let id = body["id"]
@@ -35,7 +35,7 @@ pub async fn delete_order(mut req: Request, ctx: RouteContext<()>) -> Result<Res
 
 //создание заказа
 pub async fn create_order(mut req: Request, ctx: RouteContext<()>) -> Result<Response> {
-    let d1 = ctx.env.d1("tabys_db")?;
+    let d1 = ctx.env.d1("akniet_db")?;
     let body: serde_json::Value = req.json().await?;
 
     let customer = &body["customer"];

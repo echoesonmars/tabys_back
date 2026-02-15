@@ -3,7 +3,7 @@ use worker::*;
 
 // 1. Проверка промокода (для корзины)
 pub async fn check_promo(mut req: Request, ctx: RouteContext<()>) -> Result<Response> {
-    let d1 = ctx.env.d1("tabys_db")?;
+    let d1 = ctx.env.d1("akniet_db")?;
     let body: serde_json::Value = req.json().await?;
 
     let code = body["code"].as_str().unwrap_or("").trim().to_uppercase();
@@ -20,7 +20,7 @@ pub async fn check_promo(mut req: Request, ctx: RouteContext<()>) -> Result<Resp
 
 // 2. Список промокодов
 pub async fn list_promos(_req: Request, ctx: RouteContext<()>) -> Result<Response> {
-    let d1 = ctx.env.d1("tabys_db")?;
+    let d1 = ctx.env.d1("akniet_db")?;
     let statement = d1.prepare("SELECT * FROM promocodes ORDER BY id DESC");
     let result = statement.all().await?;
     Response::from_json(&result.results::<PromoCode>()?)
@@ -28,7 +28,7 @@ pub async fn list_promos(_req: Request, ctx: RouteContext<()>) -> Result<Respons
 
 // 3. Создание промокода
 pub async fn create_promo(mut req: Request, ctx: RouteContext<()>) -> Result<Response> {
-    let d1 = ctx.env.d1("tabys_db")?;
+    let d1 = ctx.env.d1("akniet_db")?;
     let promo: PromoCode = req.json().await?;
 
     d1.prepare("INSERT INTO promocodes (code, discount, is_active) VALUES (?, ?, 1)")
@@ -41,7 +41,7 @@ pub async fn create_promo(mut req: Request, ctx: RouteContext<()>) -> Result<Res
 
 // 4. Удаление промокода
 pub async fn delete_promo(_req: Request, ctx: RouteContext<()>) -> Result<Response> {
-    let d1 = ctx.env.d1("tabys_db")?;
+    let d1 = ctx.env.d1("akniet_db")?;
     let id = ctx.param("id").unwrap();
 
     d1.prepare("DELETE FROM promocodes WHERE id = ?")
