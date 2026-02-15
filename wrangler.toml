@@ -7,11 +7,10 @@ command = "worker-build --release"
 
 [[d1_databases]]
 binding = "akniet_db"
-database_name = "akniet-db"
+database_name = "akniet_db"
 database_id = "185361c8-e119-4c2a-833c-748b7e953618"
 
 [[r2_buckets]]
 binding = "akniet_bucket"
 bucket_name = "akniet-images"
 preview_bucket_name = "akniet-images"
-
