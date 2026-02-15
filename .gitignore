@@ -1,0 +1,19 @@
+# Rust
+/target
+/dist
+**/*.rs.bk
+
+# Cloudflare / Wrangler
+.dev.vars
+.wrangler
+/node_modules
+package-lock.json
+bun.lockb
+
+# Environment
+.env
+.env.local
+
+# Mac/Windows OS files
+.DS_Store
+Thumbs.db

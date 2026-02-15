@@ -1,0 +1,16 @@
+name = "my-rust-backend"
+main = "build/index.js"
+compatibility_date = "2025-12-20"
+
+[build]
+command = "worker-build --release"
+
+[[d1_databases]]
+binding = "tabys_db"
+database_name = "tabys-db"
+database_id = "id базы"
+
+[[r2_buckets]]
+binding = "tabys_bucket"
+bucket_name = "tabys-images"
+preview_bucket_name = "tabys-images"
