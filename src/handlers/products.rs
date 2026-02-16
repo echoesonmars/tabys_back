@@ -19,13 +19,16 @@ pub async fn list_products(req: Request, ctx: RouteContext<()>) -> Result<Respon
     };
 
     let mut params: Vec<wasm_bindgen::JsValue> = Vec::new();
+    let mut has_filters = false;
 
+    // Обработка фильтров
     for (key, value) in &query_pairs {
         match key.as_str() {
             "categoryId" | "category_id" => {
                 if let Ok(id) = value.parse::<i32>() {
                     sql.push_str(" AND category_id = ?");
                     params.push(id.into());
+                    has_filters = true;
                 }
             }
             "q" if !value.is_empty() => {
@@ -34,15 +37,26 @@ pub async fn list_products(req: Request, ctx: RouteContext<()>) -> Result<Respon
                 params.push(pattern.clone().into());
                 params.push(pattern.clone().into());
                 params.push(pattern.into());
+                has_filters = true;
             }
             _ => {}
         }
     }
 
-    sql.push_str(" ORDER BY id DESC LIMIT 100");
+    // Если пользователь ничего не ищет и не выбрал категорию — перемешиваем витрину.
+
+    if has_filters {
+        sql.push_str(" ORDER BY id DESC");
+    } else {
+        sql.push_str(" ORDER BY RANDOM()");
+    }
+
+    // Ограничиваем выборку, чтобы не перегружать память
+    sql.push_str(" LIMIT 100");
 
     let statement = d1.prepare(&sql).bind(&params)?;
     let result = statement.all().await?;
+
     Response::from_json(&result.results::<Product>()?)
 }
 
